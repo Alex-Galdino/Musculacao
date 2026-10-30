@@ -9,4 +9,4 @@ para guardar um backup em JSON e **Importar** para restaurá-lo.
 
 Arquivo único: `index.html`, sem dependências além da fonte Barlow (Google Fonts).
 
-Página publicada em: https://alex-galdino.github.io/musculacao/
+Página publicada em: https://alex-galdino.github.io/Musculacao/
