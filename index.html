@@ -738,8 +738,32 @@ $("bkImport").onchange = async e=>{
   e.target.value = "";
 };
 
+/* Treinos anteriores (dados.json): entram uma única vez por navegador.
+   Um registro apagado no app não volta, porque o id fica marcado como já carregado. */
+const SEED_KEY = "treinoABC.seeded";
+async function applySeed(){
+  try{
+    const res = await fetch("dados.json", {cache:"no-store"});
+    if(!res.ok) return;
+    const d = await res.json();
+    if(!d || !Array.isArray(d.sessions)) return;
+    let seen = [];
+    try{ seen = JSON.parse(localStorage.getItem(SEED_KEY) || "[]"); }catch(e){}
+    const seenSet = new Set(seen), have = new Set(sessions.map(x=>x.id));
+    let n = 0;
+    for(const x of d.sessions){
+      if(!x || !x.id || seenSet.has(x.id)) continue;
+      if(!have.has(x.id)){ sessions.push(x); n++; }
+      seen.push(x.id);
+    }
+    try{ localStorage.setItem(SEED_KEY, JSON.stringify(seen)); }catch(e){}
+    if(n){ saveLocal(); render(); toast(n + " treinos anteriores carregados"); }
+  }catch(e){}
+}
+
 loadLocal();
 render();
+applySeed();
 initDb();
 </script>
 
